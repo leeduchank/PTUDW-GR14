@@ -1,0 +1,73 @@
+-- Execute each paragraph of the script individually
+-- create a DB and change the config name of database in ultis/db.js
+-- Create the "spaces" table
+CREATE TABLE spaces (
+    id_spaces INT PRIMARY KEY,
+    address VARCHAR(255),
+    long_s FLOAT,
+    lat_s FLOAT,
+    type VARCHAR(50),
+    format VARCHAR(50),
+    ward VARCHAR(50)
+);
+
+-- Create the "surfaces" table
+CREATE TABLE surfaces (
+    id_surfaces INT PRIMARY KEY,
+    format VARCHAR(50),
+    width INT,
+    height INT,
+    imgURL VARCHAR(255),
+    space INT,
+    FOREIGN KEY (space) REFERENCES spaces(id_spaces)
+);
+
+-- Create the "report" table
+CREATE TABLE report (
+    id_reports INT PRIMARY KEY,
+    address VARCHAR(255),
+    long_r FLOAT,
+    lat_r FLOAT,
+    report_date DATETIME,
+    content TEXT,
+    email VARCHAR(255),
+    phone VARCHAR(20),
+    state INT,
+    surface INT,
+    FOREIGN KEY (surface) REFERENCES surfaces(id_surfaces)
+);
+
+
+Mock Data
+
+-- Insert data into the "spaces" table
+INSERT INTO spaces (id_spaces, address, long_s, lat_s, type, format, ward)
+VALUES
+    (1, '123 Main St', 34.0522, -118.2437, 'Office', 'Open', 'Downtown'),
+    (2, '456 Elm St', 40.7128, -74.0060, 'Residential', 'Closed', 'Suburb'),
+    (3, '789 Oak St', 37.7749, -122.4194, 'Commercial', 'Mixed', 'City Center');
+
+-- Insert data into the "surfaces" table
+INSERT INTO surfaces (id_surfaces, format, width, height, imgURL, space)
+VALUES
+    (1, 'Wall', 10, 8, 'http://example.com/img1.jpg', 1),
+    (2, 'Floor', 15, 12, 'http://example.com/img2.jpg', 1),
+    (3, 'Ceiling', 8, 6, 'http://example.com/img3.jpg', 1),
+    (4, 'Window', 5, 4, 'http://example.com/img4.jpg', 2),
+    (5, 'Floor', 12, 10, 'http://example.com/img5.jpg', 2),
+    (6, 'Wall', 8, 6, 'http://example.com/img6.jpg', 3);
+
+-- Insert data into the "report" table
+INSERT INTO report (id_reports, address, long_r, lat_r, report_date, content, email, phone, state, surface)
+VALUES
+    (1, '123 Main St', 34.0522, -118.2437, '2023-01-01 08:00:00', 'Report content 1', 'email1@example.com', '123-456-7890', 1, 1),
+    (2, '456 Elm St', 40.7128, -74.0060, '2023-01-02 10:30:00', 'Report content 2', 'email2@example.com', '987-654-3210', 2, 2),
+    (3, '789 Oak St', 37.7749, -122.4194, '2023-01-03 12:45:00', 'Report content 3', 'email3@example.com', '111-222-3333', 3, 3),
+    (4, '456 Elm St', 40.7128, -74.0060, '2023-01-04 14:15:00', 'Report content 4', 'email4@example.com', '444-555-6666', 1, 4),
+    (5, '789 Oak St', 37.7749, -122.4194, '2023-01-05 16:30:00', 'Report content 5', 'email5@example.com', '777-888-9999', 2, 5),
+    (6, '123 Main St', 34.0522, -118.2437, '2023-01-06 18:00:00', 'Report content 6', 'email6@example.com', '000-111-2222', 3, 6),
+    (7, '123 Main St', 34.0522, -118.2437, '2023-01-07 20:15:00', 'Report content 7', 'email7@example.com', '123-456-7890', 1, NULL),
+    (8, '456 Elm St', 40.7128, -74.0060, '2023-01-08 22:30:00', 'Report content 8', 'email8@example.com', '987-654-3210', 2, NULL),
+    (9, '789 Oak St', 37.7749, -122.4194, '2023-01-09 00:45:00', 'Report content 9', 'email9@example.com', '111-222-3333', 3, 1),
+    (10, '456 Elm St', 40.7128, -74.0060, '2023-01-10 02:15:00', 'Report content 10', 'email10@example.com', '444-555-6666', 1, 2);
+
