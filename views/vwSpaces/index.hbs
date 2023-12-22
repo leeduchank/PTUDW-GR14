@@ -1,0 +1,28 @@
+<table class="table">
+    <thead class="thead-light">
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Address</th>
+        <th scope="col">Type</th>
+        <th scope="col">Format</th>
+        <th scope="col">Ward</th>
+        <th scope="col" ></th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each this.spaces}}
+    <tr>
+        <th scope="row">{{id_spaces}}</th>
+        <td>{{address}}</td>
+        <td>{{type}}</td>
+        <td>{{format}}</td>
+        <td>{{ward}}</td>
+        <td class="text-left">
+            <a class="btn btn-sm btn-primary" href="/admin/surfaces/bySpace/{{id_spaces}}" role="button">
+            <i class="fa fa-hand-o-right" aria-hidden="true">View Spaces</i>
+            </a>
+        </td>
+    </tr>
+    {{/each}}
+    </tbody>
+</table>
