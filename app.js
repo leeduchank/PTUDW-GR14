@@ -2,8 +2,10 @@ import express from 'express';
 import {dirname} from 'path';
 import {fileURLToPath} from 'url';
 import morgan from 'morgan';
+import spacesModel from "./models/spaces.model.js";
 
 import { engine } from 'express-handlebars';
+import surfacesModel from "./models/surfaces.model.js";
 
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -23,6 +25,28 @@ app.set('views', './views');
 
 app.get('/', function (req, res) {
     res.render('home');
+});
+
+app.get('/admin/spaces', async function(req, res) {
+    const spacesList = await spacesModel.findAll();
+    // console.log(spacesList);
+    res.render('vwSpaces/index.hbs',
+    {spaces : spacesList
+    });
+});
+
+app.get('/admin/reports', function (req, res) {
+    res.render('home');
+});
+
+app.get('/admin/surfaces/bySpace/:id',async function (req, res) {
+    const spaceId = req.params.id || 0;
+    console.log(spaceId);
+    const surfacesList = await surfacesModel.findBySpaceId(spaceId);
+    console.log(surfacesList);
+    res.render('vwSurfaces/SurfacesbySpace.hbs',
+    {surfaces : surfacesList}
+    );
 });
 
 app.use(function (req, res) {
