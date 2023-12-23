@@ -1,0 +1,24 @@
+<table class="table">
+    <thead class="thead-light">
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Format</th>
+        <th scope="col">Size</th>
+        <th scope="col" ></th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each this.surfaces}}
+    <tr>
+        <th scope="row">{{id_surfaces}}</th>
+        <td>{{format}}</td>
+        <td>{{width}}m x {{height}}m</td>
+        <td class="text-left">
+            <a class="btn btn-sm btn-primary" href="" role="button">
+                <i class="fa fa-hand-o-right" aria-hidden="true">Report</i>
+            </a>
+        </td>
+    </tr>
+    {{/each}}
+    </tbody>
+</table>
