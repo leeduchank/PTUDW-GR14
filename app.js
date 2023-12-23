@@ -35,6 +35,15 @@ app.get('/admin/spaces', async function(req, res) {
     });
 });
 
+app.get('/admin/surfaces', async function(req, res) {
+    const surfacesList = await surfacesModel.findAll();
+    console.log(surfacesList);
+    res.render('vwSurfaces/index.hbs',
+        {surfaces : surfacesList
+        });
+});
+
+
 app.get('/admin/reports', function (req, res) {
     res.render('home');
 });
