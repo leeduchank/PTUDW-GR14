@@ -55,7 +55,31 @@ VALUES
     (3, 'Ceiling', 8, 6, 'http://example.com/img3.jpg', 1),
     (4, 'Window', 5, 4, 'http://example.com/img4.jpg', 2),
     (5, 'Floor', 12, 10, 'http://example.com/img5.jpg', 2),
-    (6, 'Wall', 8, 6, 'http://example.com/img6.jpg', 3);
+    (6, 'Wall', 8, 6, 'http://example.com/img6.jpg', 3),
+    (7, 'Ceiling', 12, 10, 'http://example.com/img7.jpg', 3),
+    (8, 'Window', 10, 8, 'http://example.com/img8.jpg', 1),
+    (9, 'Wall', 15, 12, 'http://example.com/img9.jpg', 2),
+    (10, 'Floor', 8, 6, 'http://example.com/img10.jpg', 3),
+    (11, 'Ceiling', 5, 4, 'http://example.com/img11.jpg', 1),
+    (12, 'Window', 12, 10, 'http://example.com/img12.jpg', 3),
+    (13, 'Wall', 10, 8, 'http://example.com/img13.jpg', 2),
+    (14, 'Floor', 15, 12, 'http://example.com/img14.jpg', 1),
+    (15, 'Window', 8, 6, 'http://example.com/img15.jpg', 2),
+    (16, 'Wall', 5, 4, 'http://example.com/img16.jpg', 3),
+    (17, 'Floor', 12, 10, 'http://example.com/img17.jpg', 1),
+    (18, 'Ceiling', 8, 6, 'http://example.com/img18.jpg', 2),
+    (19, 'Window', 15, 12, 'http://example.com/img19.jpg', 3),
+    (20, 'Wall', 10, 8, 'http://example.com/img20.jpg', 1),
+    (21, 'Ceiling', 12, 10, 'http://example.com/img21.jpg', 2),
+    (22, 'Window', 8, 6, 'http://example.com/img22.jpg', 3),
+    (23, 'Wall', 5, 4, 'http://example.com/img23.jpg', 1),
+    (24, 'Floor', 15, 12, 'http://example.com/img24.jpg', 3),
+    (25, 'Ceiling', 10, 8, 'http://example.com/img25.jpg', 2),
+    (26, 'Window', 12, 10, 'http://example.com/img26.jpg', 1),
+    (27, 'Wall', 8, 6, 'http://example.com/img27.jpg', 2),
+    (28, 'Floor', 5, 4, 'http://example.com/img28.jpg', 1),
+    (29, 'Ceiling', 15, 12, 'http://example.com/img29.jpg', 3),
+    (30, 'Window', 10, 8, 'http://example.com/img30.jpg', 2);
 
 -- Insert data into the "report" table
 INSERT INTO report (id_reports, address, long_r, lat_r, report_date, content, email, phone, state, surface)
