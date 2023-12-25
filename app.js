@@ -45,17 +45,46 @@ app.get('/admin/surfaces', async function(req, res) {
 
 
 app.get('/admin/reports', function (req, res) {
-    res.render('home');
+    res.render('vwReports/form');
 });
+
+// app.get('/admin/surfaces/bySpace/:id',async function (req, res) {
+//     const spaceId = req.params.id || 0;
+//     console.log(spaceId);
+//     const surfacesList = await surfacesModel.findBySpaceId(spaceId);
+//     console.log(surfacesList);
+//     res.render('vwSurfaces/SurfacesbySpace.hbs',
+//     {surfaces : surfacesList}
+//     );
+// });
 
 app.get('/admin/surfaces/bySpace/:id',async function (req, res) {
     const spaceId = req.params.id || 0;
-    console.log(spaceId);
-    const surfacesList = await surfacesModel.findBySpaceId(spaceId);
+
+
+    const limit = 4;
+    const page = req.query.page || 1;
+    const offset = (page - 1) * limit;
+
+    const total = await surfacesModel.countBySpaceId(spaceId);
+    let nPages = Math.floor(total / limit);
+    if (total % limit > 0) nPages++;
+
+    const pageNumbers = [];
+    for (let i = 1; i <= nPages; i++) {
+        pageNumbers.push({
+            value: i,
+            isCurrent: +page === i
+        });
+    }
+
+    const surfacesList = await surfacesModel.findPageBySpaceId(spaceId,limit,offset);
+
     console.log(surfacesList);
-    res.render('vwSurfaces/SurfacesbySpace.hbs',
-    {surfaces : surfacesList}
-    );
+    res.render('vwSurfaces/SurfacesbySpace.hbs', {
+        surfaces : surfacesList,
+        pageNumbers
+    });
 });
 
 app.use(function (req, res) {
@@ -66,5 +95,5 @@ app.use(function (req, res) {
 const port = 3000;
 
 app.listen(port, function()  {
-    console.log(`E-commerce app listening at http://localhost:${port}`)
+    console.log(`Ads Management app listening at http://localhost:${port}`)
 });
