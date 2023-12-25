@@ -1,25 +1,53 @@
-<table class="table">
-    <thead class="thead-light">
-    <tr>
-        <th scope="col">#</th>
-        <th scope="col">Format</th>
-        <th scope="col">Size</th>
-        <th scope="col"></th>
-    </tr>
-    </thead>
-    <tbody>
-    {{#each this.surfaces}}
-        <tr>
-            <th scope="row">{{id_surfaces}}</th>
-            <td>{{format}}</td>
-            <td>{{width}}m x {{height}}m </td>
-            <<td class="text-left">
-            <a class="btn btn-sm btn-primary" href="#" role="button">
-                <i class="fa fa-hand-o-right" aria-hidden="true">Report</i>
-            </a>
-        </td>
-        </tr>
-    {{/each}}
-
-    </tbody>
-</table>
+<div class="card">
+    <div class="card-header">
+        Surfaces
+    </div>
+    <table class="table">
+        <table class="table">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Format</th>
+                <th scope="col">Size</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+                {{#each this.surfaces}}
+                    <tr>
+                        <th scope="row">{{id_surfaces}}</th>
+                        <td>{{format}}</td>
+                        <td>{{width}}m x {{height}}m</td>
+                        <td class="text-left">
+                            <a class="btn btn-sm btn-outline-primary" href="#" role="button">
+                                <i class="fa fa-hand-o-right" aria-hidden="true"> Report</i>
+                            </a>
+                        </td>
+                    </tr>
+                    {{/each}}
+            </tbody>
+        </table>
+    <div class="card-footer text-muted">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+                <li class="page-item">
+                    <a class="page-link" href="#">Previous</a>
+                </li>
+                    {{#each this.pageNumbers}}
+                        {{#if isCurrent}}
+                            <li class="page-item active">
+                                <a class="page-link" href="javascript:;">{{value}}</a>
+                            </li>
+                            {{else}}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{value}}">{{value}}</a>
+                            </li>
+                            {{/if}}
+                    {{/each}}
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
