@@ -25,9 +25,9 @@ CREATE TABLE ward (
     FOREIGN KEY (district_id) REFERENCES district(district_id)
 );
 
--- Create Ads Location Table
-CREATE TABLE ads_location (
-    location_id INT AUTO_INCREMENT PRIMARY KEY,
+-- Create Space Table
+CREATE TABLE space (
+    space_id INT AUTO_INCREMENT PRIMARY KEY,
     address VARCHAR(255) NOT NULL,
     longitude FLOAT,
     latitude FLOAT,
@@ -41,18 +41,18 @@ CREATE TABLE ads_location (
     FOREIGN KEY (ward_id) REFERENCES ward(ward_id)
 );
 
--- Create Board Table
-CREATE TABLE board (
-    board_id INT AUTO_INCREMENT PRIMARY KEY,
+-- Create Surface Table
+CREATE TABLE surface (
+    surface_id INT AUTO_INCREMENT PRIMARY KEY,
     form VARCHAR(255),
     width FLOAT,
     height FLOAT,
     img_url VARCHAR(255),
     content VARCHAR(255),
-    location_id INT,
+    space_id INT,
     created_at DATETIME,
     updated_at DATETIME,
-    FOREIGN KEY (location_id) REFERENCES ads_location(location_id)
+    FOREIGN KEY (space_id) REFERENCES space(space_id)
 );
 
 -- Create Report Table
@@ -61,8 +61,8 @@ CREATE TABLE report (
     address VARCHAR(255),
     longitude FLOAT,
     latitude FLOAT,
-    location_id INT,
-    board_id INT,
+    space_id INT,
+    surface_id INT,
     ward_id INT,
     type VARCHAR(255),
     name VARCHAR(255),
@@ -73,80 +73,65 @@ CREATE TABLE report (
     state INT,
     created_at DATETIME,
     updated_at DATETIME,
-    FOREIGN KEY (location_id) REFERENCES ads_location(location_id),
-    FOREIGN KEY (board_id) REFERENCES board(board_id)
+    FOREIGN KEY (space_id) REFERENCES space(space_id),
+    FOREIGN KEY (surface_id) REFERENCES surface(surface_id)
 );
 
 
------ mock db
+-- mock data
 -- Insert data into City table
 INSERT INTO city (city_name, created_at, updated_at) VALUES
 ('Ho Chi Minh City', NOW(), NOW());
 
--- Get the city_id for Ho Chi Minh City
-SET @city_id := LAST_INSERT_ID();
-
 -- Insert data into District table
 INSERT INTO district (district_name, city_id, created_at, updated_at) VALUES
-('Quan 1', @city_id, NOW(), NOW()),
-('Quan 2', @city_id, NOW(), NOW());
+('District 1', 1, NOW(), NOW()),
+('District 2', 1, NOW(), NOW());
 
--- Get the district_ids for Quan 1 and Quan 2
-SET @district_id_quan1 := LAST_INSERT_ID();
-SET @district_id_quan2 := LAST_INSERT_ID() - 1;
-
--- Insert data into Ward table for Quan 1
+-- Insert data into Ward table for District 1
 INSERT INTO ward (ward_name, district_id, created_at, updated_at) VALUES
-('Ward 1', @district_id_quan1, NOW(), NOW()),
-('Ward 2', @district_id_quan1, NOW(), NOW()),
-('Ward 3', @district_id_quan1, NOW(), NOW());
+('Ward 1', 1, NOW(), NOW()),
+('Ward 2', 1, NOW(), NOW()),
+('Ward 3', 1, NOW(), NOW());
 
--- Insert data into Ward table for Quan 2
+-- Insert data into Ward table for District 2
 INSERT INTO ward (ward_name, district_id, created_at, updated_at) VALUES
-('Ward A', @district_id_quan2, NOW(), NOW()),
-('Ward B', @district_id_quan2, NOW(), NOW()),
-('Ward C', @district_id_quan2, NOW(), NOW());
-
--- Get the ward_ids for the wards
-SET @ward_id_ward1 := LAST_INSERT_ID();
-SET @ward_id_ward2 := LAST_INSERT_ID() - 1;
-SET @ward_id_ward3 := LAST_INSERT_ID() - 2;
-SET @ward_id_wardA := LAST_INSERT_ID() - 3;
-SET @ward_id_wardB := LAST_INSERT_ID() - 4;
-SET @ward_id_wardC := LAST_INSERT_ID() - 5;
+('Ward A', 2, NOW(), NOW()),
+('Ward B', 2, NOW(), NOW()),
+('Ward C', 2, NOW(), NOW());
 
 -- Insert data into Ads Location table for Ward 1
-INSERT INTO ads_location (address, longitude, latitude, type, format, img_url, is_planned, ward_id, created_at, updated_at) VALUES
-('Address 1, Ward 1, Quan 1', 10.7787, 106.7009, 'Outdoor', 'Banner', 'img1_1.jpg', 1, @ward_id_ward1, NOW(), NOW()),
-('Address 2, Ward 1, Quan 1', 10.7789, 106.7011, 'Indoor', 'Digital', 'img1_2.jpg', 0, @ward_id_ward1, NOW(), NOW());
+INSERT INTO space (address, longitude, latitude, type, format, img_url, is_planned, ward_id, created_at, updated_at) VALUES
+('Address 1, Ward 1, District 1', 10.7787, 106.7009, 'Outdoor', 'Banner', 'img1_1.jpg', 1, 1, NOW(), NOW()),
+('Address 2, Ward 1, District 1', 10.7789, 106.7011, 'Indoor', 'Digital', 'img1_2.jpg', 0, 1, NOW(), NOW());
 
 -- Insert data into Ads Location table for Ward 2
-INSERT INTO ads_location (address, longitude, latitude, type, format, img_url, is_planned, ward_id, created_at, updated_at) VALUES
-('Address 1, Ward 2, Quan 1', 10.7795, 106.7017, 'Transit', 'Poster', 'img2_1.jpg', 1, @ward_id_ward2, NOW(), NOW()),
-('Address 2, Ward 2, Quan 1', 10.7797, 106.7019, 'Outdoor', 'Banner', 'img2_2.jpg', 0, @ward_id_ward2, NOW(), NOW());
+INSERT INTO space (address, longitude, latitude, type, format, img_url, is_planned, ward_id, created_at, updated_at) VALUES
+('Address 1, Ward 2, District 1', 10.7795, 106.7017, 'Transit', 'Poster', 'img2_1.jpg', 1, 2, NOW(), NOW()),
+('Address 2, Ward 2, District 1', 10.7797, 106.7019, 'Outdoor', 'Banner', 'img2_2.jpg', 0, 2, NOW(), NOW());
 
 -- Insert data into Ads Location table for Ward 3
-INSERT INTO ads_location (address, longitude, latitude, type, format, img_url, is_planned, ward_id, created_at, updated_at) VALUES
-('Address 1, Ward 3, Quan 1', 10.7803, 106.7025, 'Indoor', 'Digital', 'img3_1.jpg', 1, @ward_id_ward3, NOW(), NOW()),
-('Address 2, Ward 3, Quan 1', 10.7805, 106.7027, 'Transit', 'Poster', 'img3_2.jpg', 0, @ward_id_ward3, NOW(), NOW());
+INSERT INTO space (address, longitude, latitude, type, format, img_url, is_planned, ward_id, created_at, updated_at) VALUES
+('Address 1, Ward 3, District 1', 10.7803, 106.7025, 'Indoor', 'Digital', 'img3_1.jpg', 1, 3, NOW(), NOW()),
+('Address 2, Ward 3, District 1', 10.7805, 106.7027, 'Transit', 'Poster', 'img3_2.jpg', 0, 3, NOW(), NOW());
 
 -- Insert data into Ads Location table for Ward A
-INSERT INTO ads_location (address, longitude, latitude, type, format, img_url, is_planned, ward_id, created_at, updated_at) VALUES
-('Address 1, Ward A, Quan 2', 10.7870, 106.7078, 'Outdoor', 'Banner', 'imgA_1.jpg', 1, @ward_id_wardA, NOW(), NOW()),
-('Address 2, Ward A, Quan 2', 10.7872, 106.7080, 'Indoor', 'Digital', 'imgA_2.jpg', 0, @ward_id_wardA, NOW(), NOW());
+INSERT INTO space (address, longitude, latitude, type, format, img_url, is_planned, ward_id, created_at, updated_at) VALUES
+('Address 1, Ward A, District 2', 10.7870, 106.7078, 'Outdoor', 'Banner', 'imgA_1.jpg', 1, 4, NOW(), NOW()),
+('Address 2, Ward A, District 2', 10.7872, 106.7080, 'Indoor', 'Digital', 'imgA_2.jpg', 0, 4, NOW(), NOW());
 
 -- Insert data into Ads Location table for Ward B
-INSERT INTO ads_location (address, longitude, latitude, type, format, img_url, is_planned, ward_id, created_at, updated_at) VALUES
-('Address 1, Ward B, Quan 2', 10.7880, 106.7088, 'Transit', 'Poster', 'imgB_1.jpg', 1, @ward_id_wardB, NOW(), NOW()),
-('Address 2, Ward B, Quan 2', 10.7882, 106.7090, 'Outdoor', 'Banner', 'imgB_2.jpg', 0, @ward_id_wardB, NOW(), NOW());
+INSERT INTO space (address, longitude, latitude, type, format, img_url, is_planned, ward_id, created_at, updated_at) VALUES
+('Address 1, Ward B, District 2', 10.7880, 106.7088, 'Transit', 'Poster', 'imgB_1.jpg', 1, 5, NOW(), NOW()),
+('Address 2, Ward B, District 2', 10.7882, 106.7090, 'Outdoor', 'Banner', 'imgB_2.jpg', 0, 5, NOW(), NOW());
 
 -- Insert data into Ads Location table for Ward C
-INSERT INTO ads_location (address, longitude, latitude, type, format, img_url, is_planned, ward_id, created_at, updated_at) VALUES
-('Address 1, Ward C, Quan 2', 10.7890, 106.7098, 'Indoor', 'Digital', 'imgC_1.jpg', 1, @ward_id_wardC, NOW(), NOW()),
-('Address 2, Ward C, Quan 2', 10.7892, 106.7100, 'Transit', 'Poster', 'imgC_2.jpg', 0, @ward_id_wardC, NOW(), NOW());
+INSERT INTO space (address, longitude, latitude, type, format, img_url, is_planned, ward_id, created_at, updated_at) VALUES
+('Address 1, Ward C, District 2', 10.7890, 106.7098, 'Indoor', 'Digital', 'imgC_1.jpg', 1, 6, NOW(), NOW()),
+('Address 2, Ward C, District 2', 10.7892, 106.7100, 'Transit', 'Poster', 'imgC_2.jpg', 0, 6, NOW(), NOW());
 
--- Insert data into Board table for Ads Locations 1 to 12
-INSERT INTO board (form, width, height, img_url, content, location_id, created_at, updated_at) VALUES
+-- Insert data into Surface table for Ads Locations 1 to 12
+INSERT INTO surface (form, width, height, img_url, content, space_id, created_at, updated_at) VALUES
 -- Location 1
 ('Rectangular', 5.5, 2.5, 'board_img1_1.jpg', 'Advertisement 1', 1, NOW(), NOW()),
 ('Digital', 10, 6, 'board_img1_2.jpg', 'Advertisement 2', 1, NOW(), NOW()),
@@ -166,6 +151,8 @@ INSERT INTO board (form, width, height, img_url, content, location_id, created_a
 ('Rectangular', 5.5, 2.5, 'board_img6_1.jpg', 'Advertisement 11', 6, NOW(), NOW()),
 ('Digital', 10, 6, 'board_img6_2.jpg', 'Advertisement 12', 6, NOW(), NOW()),
 
+-- Insert data into Surface table for Ads Locations 7 to 12
+INSERT INTO surface (form, width, height, img_url, content, space_id, created_at, updated_at) VALUES
 -- Location 7
 ('Digital', 10, 6, 'board_imgA_1.jpg', 'Advertisement 13', 7, NOW(), NOW()),
 ('Rectangular', 5.5, 2.5, 'board_imgA_2.jpg', 'Advertisement 14', 7, NOW(), NOW()),
@@ -184,4 +171,3 @@ INSERT INTO board (form, width, height, img_url, content, location_id, created_a
 -- Location 12
 ('Digital', 10, 6, 'board_imgF_1.jpg', 'Advertisement 23', 12, NOW(), NOW()),
 ('Rectangular', 5.5, 2.5, 'board_imgF_2.jpg', 'Advertisement 24', 12, NOW(), NOW());
-
