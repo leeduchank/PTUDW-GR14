@@ -2,15 +2,17 @@ import express from 'express';
 import {dirname} from 'path';
 import {fileURLToPath} from 'url';
 import morgan from 'morgan';
-import spacesModel from "./models/spaces.model.js";
+import spacesModel from "./model/spaces.model.js";
+import cors from 'cors'
 
 import { engine } from 'express-handlebars';
-import surfacesModel from "./models/surfaces.model.js";
+import surfacesModel from "./model/surfaces.model.js";
 
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
+app.use(cors());
 app.use(morgan('dev'))
 app.use(express.urlencoded({
     extended: true
@@ -26,7 +28,10 @@ app.set('views', './views');
 app.get('/', function (req, res) {
     res.render('home');
 });
-
+app.get('/spaces', async (req, res) => {
+    const spacesList = await  spacesModel.findAll();
+    res.json(spacesList);
+});
 app.get('/admin/spaces', async function(req, res) {
     const spacesList = await spacesModel.findAll();
     // console.log(spacesList);
