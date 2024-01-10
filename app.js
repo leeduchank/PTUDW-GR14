@@ -1,104 +1,26 @@
 import express from 'express';
-import {dirname} from 'path';
-import {fileURLToPath} from 'url';
 import morgan from 'morgan';
-import spacesModel from "./model/spaces.model.js";
-import cors from 'cors'
+import asyncErrors from 'express-async-errors'; // error handling , client: 500 ; console: log error
 
-import { engine } from 'express-handlebars';
-import surfacesModel from "./model/surfaces.model.js";
-
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import activate_locals_middleware from './middlewares/locals.mdw.js';
+import activate_view_middleware from './middlewares/view.mdw.js';
+import activate_route_middleware from './middlewares/routes.mdw.js';
+import activate_session_middleware from './middlewares/session.mdw.js';
 
 const app = express();
-app.use(cors());
-app.use(morgan('dev'))
+
+app.use(morgan('dev'));
 app.use(express.urlencoded({
-    extended: true
+  extended: true
 }));
+app.use('/public', express.static('public'));
 
+activate_session_middleware(app);
+activate_locals_middleware(app);
+activate_view_middleware(app);
+activate_route_middleware(app);
 
-app.engine('hbs', engine({
-    defaultLayout: 'main.hbs',
-}));
-app.set('view engine', 'hbs');
-app.set('views', './views');
-
-app.get('/', function (req, res) {
-    res.render('home');
-});
-app.get('/spaces', async (req, res) => {
-    const spacesList = await  spacesModel.findAll();
-    res.json(spacesList);
-});
-app.get('/admin/spaces', async function(req, res) {
-    const spacesList = await spacesModel.findAll();
-    // console.log(spacesList);
-    res.render('vwSpaces/index.hbs',
-    {spaces : spacesList
-    });
-});
-
-app.get('/admin/surfaces', async function(req, res) {
-    const surfacesList = await surfacesModel.findAll();
-    console.log(surfacesList);
-    res.render('vwSurfaces/index.hbs',
-        {surfaces : surfacesList
-        });
-});
-
-
-app.get('/admin/reports', function (req, res) {
-    res.render('vwReports/form');
-});
-
-// app.get('/admin/surfaces/bySpace/:id',async function (req, res) {
-//     const spaceId = req.params.id || 0;
-//     console.log(spaceId);
-//     const surfacesList = await surfacesModel.findBySpaceId(spaceId);
-//     console.log(surfacesList);
-//     res.render('vwSurfaces/SurfacesbySpace.hbs',
-//     {surfaces : surfacesList}
-//     );
-// });
-
-app.get('/admin/surfaces/bySpace/:id',async function (req, res) {
-    const spaceId = req.params.id || 0;
-
-
-    const limit = 4;
-    const page = req.query.page || 1;
-    const offset = (page - 1) * limit;
-
-    const total = await surfacesModel.countBySpaceId(spaceId);
-    let nPages = Math.floor(total / limit);
-    if (total % limit > 0) nPages++;
-
-    const pageNumbers = [];
-    for (let i = 1; i <= nPages; i++) {
-        pageNumbers.push({
-            value: i,
-            isCurrent: +page === i
-        });
-    }
-
-    const surfacesList = await surfacesModel.findPageBySpaceId(spaceId,limit,offset);
-
-    console.log(surfacesList);
-    res.render('vwSurfaces/SurfacesbySpace.hbs', {
-        surfaces : surfacesList,
-        pageNumbers
-    });
-});
-
-app.use(function (req, res) {
-    res.status(404);
-    res.render('404',{layout:false});
-});
-
-const port = 3000;
-
-app.listen(port, function()  {
-    console.log(`Ads Management app listening at http://localhost:${port}`)
+const port = 3009;
+app.listen(port, function () {
+  console.log(`Example app listening at http://localhost:${port}`);
 });
