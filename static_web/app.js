@@ -4,17 +4,16 @@ let geocoder;
 let responseDiv;
 let response;
 let locations
+let infoWindow1
 
-const spaceList = [
-  {lat: 10.7645554,lng: 106.6819694 },
-  { lat: 10.2442, lng: 106.24242 },
-  { lat: 10.3456, lng: 106.56789 },
-  { lat: 10.1234, lng: 106.98765 },
-  { lat: 10.1245, lng: 106.24242 },
-  { lat: 10.2245, lng: 106.42145 },
-  { lat: 10.2244, lng: 106.1111 },
+// x = navigator.geolocation;
+// x.getCurrentPosition(sucssess,failure);
 
-]
+// function success(position){
+
+// }
+
+
 function fetchLocationsFromApi() {
   
   return fetch("http://localhost:3000/spaces" ,{
@@ -32,14 +31,50 @@ function fetchLocationsFromApi() {
 }
 window.handleButtonClick = function(index) {
   // You can use the index to identify which marker's button was clicked
-  alert(`Button clicked for marker at index ${index}`);
+  // alert(`Button clicked for marker at index ${index}`);
 };
 function initMap() {
+  
   map = new google.maps.Map(document.getElementById("map"), {
     zoom: 15,
     center: { lat: 10.7645554, lng: 106.6819694 },
     mapTypeControl: false,
   });
+
+  infoWindow1 = new google.maps.InfoWindow();
+
+  const locationButton = document.createElement("button");
+
+  locationButton.textContent = "Pan to Current Location";
+  locationButton.classList.add("custom-map-control-button");
+  map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
+  locationButton.addEventListener("click", () => {
+    // Try HTML5 geolocation.
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+
+          infoWindow1.setPosition(pos);
+          infoWindow1.setContent("Location found.");
+          infoWindow1.open(map);
+          map.setCenter(pos);
+        },
+        () => {
+          handleLocationError(true, infoWindow1, map.getCenter());
+        },
+      );
+    } else {
+      // Browser doesn't support Geolocation
+      handleLocationError(false, infoWindow1, map.getCenter());
+    }
+  });
+
+
+
 
   geocoder = new google.maps.Geocoder();
 
@@ -65,6 +100,8 @@ function initMap() {
   responseDiv = document.createElement("div");
   responseDiv.id = "response-container";
   responseDiv.appendChild(response);
+
+
 
   const instructionsElement = document.createElement("p");
 
@@ -92,10 +129,11 @@ function initMap() {
 
       marker.addListener("click", () => {
         // Modify the info window content when the marker is clicked
+        console.log(location)
         infowindow.setContent(`
           <div>
             <p>Marker Information</p>
-            <button onclick="handleButtonClick(${index})">Click me</button>
+            <button onclick="handleButtonClick(${location})">Click me</button>
           </div>
         `);
 
@@ -139,6 +177,16 @@ function initMap() {
   clear();
 }
 
+
+function handleLocationError(browserHasGeolocation, infoWindow1, pos) {
+  infoWindow1.setPosition(pos);
+  infoWindow1.setContent(
+    browserHasGeolocation
+      ? "Error: The Geolocation service failed."
+      : "Error: Your browser doesn't support geolocation.",
+  );
+  infoWindow1.open(map);
+}
 
 function findClosestLocation(clickedLatLng) {
   // Tìm địa điểm gần nhất với vị trí click
