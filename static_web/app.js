@@ -6,17 +6,97 @@ let response;
 let locations
 let infoWindow1
 
-// x = navigator.geolocation;
-// x.getCurrentPosition(sucssess,failure);
 
-// function success(position){
-
-// }
-
+ const spaces_planned = [
+  [{"adress": "abc",
+    "lng":106.7801,
+    "lat":10.7887,
+    "type":"outdoor",
+    "format":"banner",
+    "img_url":"",
+    "is_planned":true} ],
+    [{"adress": "abc",
+    "lng":106.78801,
+    "lat":10.78887,
+    "type":"outdoor",
+    "format":"banner",
+    "img_url":"",
+    "is_planned":true} ],
+    [{"adress": "abc",
+    "lng":106.78901,
+    "lat":10.78897,
+    "type":"outdoor",
+    "format":"banner",
+    "img_url":"",
+    "is_planned":true} ],
+    [{"adress": "abc",
+    "lng":106.78071,
+    "lat":10.78877,
+    "type":"transist",
+    "format":"banner",
+    "img_url":"",
+    "is_planned":true} ],
+    [{"adress": "abc",
+    "lng":106.78071,
+    "lat":10.78877,
+    "type":"indoor",
+    "format":"banner",
+    "img_url":"",
+    "is_planned":true} ],
+    [{"adress": "abc",
+    "lng":106.78016,
+    "lat":10.78876,
+    "type":"indoor",
+    "format":"banner",
+    "img_url":"",
+    "is_planned":true} ],
+  [{"adress": "abc",
+    "lng":106.77801,
+    "lat":10.77887,
+    "type":"outdoor",
+    "format":"banner",
+    "img_url":"",
+    "is_planned":false} ],
+    [{"adress": "abc",
+    "lng":106.678801,
+    "lat":10.678887,
+    "type":"outdoor",
+    "format":"banner",
+    "img_url":"",
+    "is_planned":false} ],
+    [{"adress": "abc",
+    "lng":106.878901,
+    "lat":10.878897,
+    "type":"outdoor",
+    "format":"banner",
+    "img_url":"",
+    "is_planned":false} ],
+    [{"adress": "abc",
+    "lng":106.978071,
+    "lat":10.978877,
+    "type":"transist",
+    "format":"banner",
+    "img_url":"",
+    "is_planned":false} ],
+    [{"adress": "abc",
+    "lng":106.787071,
+    "lat":10.788777,
+    "type":"indoor",
+    "format":"banner",
+    "img_url":"",
+    "is_planned":false} ],
+    [{"adress": "abc",
+    "lng":106.787016,
+    "lat":10.788776,
+    "type":"indoor",
+    "format":"banner",
+    "img_url":"",
+    "is_planned":false} ],
+ ]
 
 function fetchLocationsFromApi() {
   
-  return fetch("http://localhost:3000/spaces" ,{
+  return fetch("http://localhost:3009/spaces" ,{
   method: 'GET',
   mode: 'cors',})
     .then(response => response.json())
@@ -40,7 +120,14 @@ function initMap() {
     center: { lat: 10.7645554, lng: 106.6819694 },
     mapTypeControl: false,
   });
+  const noteElement = document.createElement("div");
+  noteElement.innerHTML =
+    '<strong>Note:</strong><img src="Checkmark.svg" alt="Planned Icon" width="20" height="20"/> Đã quy hoạch|<img src="donot.svg" alt="Across Icon" width="20" height="20"  /> Chưa quy hoạch';
+  noteElement.classList.add("map-note");
 
+  // Append the note element to the map container
+  const mapContainer = document.getElementById("map");
+  mapContainer.parentNode.insertBefore(noteElement, mapContainer);
   infoWindow1 = new google.maps.InfoWindow();
 
   const locationButton = document.createElement("button");
@@ -113,37 +200,46 @@ function initMap() {
   map.controls[google.maps.ControlPosition.TOP_LEFT].push(clearButton);
   map.controls[google.maps.ControlPosition.LEFT_TOP].push(instructionsElement);
   map.controls[google.maps.ControlPosition.LEFT_TOP].push(responseDiv);
-  fetchLocationsFromApi()
-  .then(locations => {
-    locations.forEach((location, index) => {
-      const marker = new google.maps.Marker({
-        position: { lat: location.longitude, lng: location.latitude },
-        map,
-        title: "test",
-        icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
-      });
-
-      const infowindow = new google.maps.InfoWindow({
-        content: "Loading..." // Initial content before the button is added
-      });
-
-      marker.addListener("click", () => {
-        // Modify the info window content when the marker is clicked
-        console.log(location)
-        infowindow.setContent(`
-          <div>
-            <p>Marker Information</p>
-            <button onclick="handleButtonClick(${location})">Click me</button>
-          </div>
-        `);
-
-        infowindow.open(map, marker);
-      });
+  // fetchLocationsFromApi()
+ 
+  const markers = spaces_planned.map((location, index) => {
+    let iconUrl = "donot.svg"; // Set a default icon URL
+  if (location[0].is_planned) {
+    iconUrl = "Checkmark.svg"; // Set the planned icon URL
+  }
+    const marker = new google.maps.Marker({
+      position: { lat: location[0].lat, lng: location[0].lng },
+      map,
+      title: "test",
+      icon: {
+        url: iconUrl,
+        scaledSize: new google.maps.Size(25, 25), // Adjust the size as needed
+      },
     });
-  })
-  .catch(error => {
-    console.error("Error initializing the map:", error);
+  
+    const infowindow = new google.maps.InfoWindow({
+      content: "Loading..." // Initial content before the button is added
+    });
+  
+    marker.addListener("click", () => {
+      // Modify the info window content when the marker is clicked
+      console.log(location);
+      infowindow.setContent(`
+        <div>
+          <p>Marker Information</p>
+          <button onclick="handleButtonClick(${index})">Click me</button>
+        </div>
+      `);
+  
+      infowindow.open(map, marker);
+    });
+  
+    return marker;
   });
+  
+  // Use MarkerClusterer
+  const markerCluster = new markerClusterer.MarkerClusterer({ markers, map });
+
 
  
   

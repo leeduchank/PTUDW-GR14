@@ -31,7 +31,11 @@ router.get('/space', async function(req, res) {
         {spaces : spacesList
         });
 });
-
+router.get('/api/space', async function(req, res) {
+   
+    const spacesList = await spaceModel.findAll()
+    res.json(spacesList)
+});
 router.get('/space/request/:id', async function (req, res) {
     const spaceId = req.params.id || 0;
     const space = await spaceModel.findById(spaceId);

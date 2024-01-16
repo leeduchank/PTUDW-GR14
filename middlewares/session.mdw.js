@@ -1,6 +1,6 @@
 import session from 'express-session';
 import fnMySQLStore from 'express-mysql-session';
-import { connectionInfo } from '../utils/db.js';
+import { connectionInfo } from '../ultis/db.js';
 
 export default function (app) {
 
@@ -14,7 +14,7 @@ export default function (app) {
     saveUninitialized: true,
     store: sessionStore,
     cookie: {
-      // secure: true
+      // secure: trues
     }
   }));
 }
