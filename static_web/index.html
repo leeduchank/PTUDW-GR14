@@ -3,21 +3,137 @@
   <head>
     <title>Add Map</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="./style.css" />
-    <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>    <script type="module" src="./app.js" defer></script>
+    <!-- Bootstrap Icons CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>    
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <script type="module" src="./app.js" defer></script>
   </head>
   <body>
-    <h3>My Google Maps Demo</h3>
+    
     <!--The div element for the map -->
-    <div id="map">
+    <!-- <input type="checkbox" id="toggleMarkersSwitch" checked>
+
+    <label for="toggleMarkersSwitch" class="toggle-switch-label">
+      <span class="toggle-switch-inner"></span>
+      <span class="toggle-switch-switch"></span>
+    </label> -->
+        <div id="map">
       <div id="floating-panel">
         <input id="latlng" type="text" value="" />
         <input id="submit" type="button" value="Reverse Geocode" />
       </div>
     </div>
+     
+  
+
 
     <!-- Load Google Maps API with necessary libraries -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtu8zzgO4J1K0Tu1UoriXjgVrQ0KswEFo&callback=initMap&v=weekly&libraries=geometry" defer></script>
+    <script>
+    function submitReport(surfaceId) {
+  // Get form data
+  const email = document.getElementById("email").value;
+  const ward_id = document.getElementById("ward_id").value;
+  const space_id = document.getElementById("space_id").value;
+  const address = document.getElementById("address").value;
+  const longitude = document.getElementById("longitude").value;
+  const latitude = document.getElementById("latitude").value;
+  const name = document.getElementById("name").value;
+  const phone = document.getElementById("phone").value;
+  const type = document.getElementById("type").value;
+  const content = document.getElementById("content").value;
+
+  // Prepare data to be sent
+  const formData = {
+    space_id: space_id,
+    address: address,
+    longitude: longitude,
+    latitude: latitude,
+    email: email,
+    name: name,
+    ward_id: ward_id,
+    phone: phone,
+    type: type,
+    content: content,
+    surface_id: surfaceId
+  };
+
+  // Create a new XMLHttpRequest object
+  const xhr = new XMLHttpRequest();
+
+  // Configure it: POST-request for the given URL, with asynchronous mode
+  xhr.open("POST", `http://localhost:3000/admin/report/surface/${surfaceId}`, true);
+
+  // Set the request header to indicate the content type
+  xhr.setRequestHeader("Content-Type", "application/json");
+
+  // Define a callback function to handle the response
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      // Handle the response from the server
+      console.log(JSON.parse(xhr.responseText));
+    }
+  };
+
+  // Convert the formData object to a JSON string
+  const jsonData = JSON.stringify(formData);
+
+  // Send the request with the JSON data in the body
+  xhr.send(jsonData);
+}
+
+
+function submitReport2() {
+  // Get form data
+  const email = document.getElementById("email").value;
+  const address = document.getElementById("address").value;
+  const longitude = document.getElementById("longitude").value;
+  const latitude = document.getElementById("latitude").value;
+  const name = document.getElementById("name").value;
+  const phone = document.getElementById("phone").value;
+  // const type = document.getElementById("type").value;
+  const content = document.getElementById("content").value;
+
+  // Prepare data to be sent
+  const formData = {
+    address: address,
+    longitude: longitude,
+    latitude: latitude,
+    email: email,
+    name: name,
+    phone: phone,
+    content: content,
+  };
+
+  // Create a new XMLHttpRequest object
+  const xhr = new XMLHttpRequest();
+
+  // Configure it: POST-request for the given URL, with asynchronous mode
+  xhr.open("POST", `http://localhost:3000/admin/report/location/`, true);
+
+  // Set the request header to indicate the content type
+  xhr.setRequestHeader("Content-Type", "application/json");
+
+  // Define a callback function to handle the response
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      // Handle the response from the server
+      console.log(JSON.parse(xhr.responseText));
+    }
+  };
+
+  // Convert the formData object to a JSON string
+  const jsonData = JSON.stringify(formData);
+
+  // Send the request with the JSON data in the body
+  xhr.send(jsonData);
+}
+    </script>
+
 
     <!-- Load MarkerClusterer library -->
   </body>
